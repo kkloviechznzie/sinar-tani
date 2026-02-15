@@ -1,0 +1,160 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const bcrypt = require('bcryptjs');
+const SimpleDb = require("@zidnigz/fs-db");
+const path = require('path');
+const multer = require('multer');
+const { Parser } = require('json2csv');
+const fs = require('fs');
+
+const app = express();
+const PORT = 3000;
+
+// === KONFIGURASI UPLOAD ===
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const dir = './public/uploads';
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        cb(null, dir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
+// === DATABASE CONFIG ===
+const db = new SimpleDb("./database");
+const usersCollection = db.collection("users");
+const reportsCollection = db.collection("reports");
+
+// Seed Admin Default
+if (!usersCollection.findOne({ username: "admin" })) {
+    usersCollection.insert({
+        username: "admin",
+        password: bcrypt.hashSync("admin123", 10),
+        role: "admin",
+        fullname: "Administrator Pusat"
+    });
+}
+
+// === MIDDLEWARE ===
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(session({
+    secret: 'kmap-secret-key-super-secure',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 7200000 }
+}));
+
+// === AUTH HELPER ===
+const requireAuth = (req, res, next) => {
+    if (req.session.isLoggedIn) return next();
+    res.redirect('/login');
+};
+
+const requireAdmin = (req, res, next) => {
+    if (req.session.isLoggedIn && req.session.role === 'admin') return next();
+    res.status(403).send("Akses Ditolak: Khusus Admin.");
+};
+
+// === ROUTES UTAMA ===
+
+// 1. Login Page (GET)
+app.get('/', (req, res) => res.redirect('/login'));
+
+app.get('/login', (req, res) => {
+    if (req.session.isLoggedIn) return res.redirect('/dashboard');
+    // Render dengan variabel default agar tidak error
+    res.render('login', { error: null, success: null });
+});
+
+// 2. Login Process (POST)
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    const user = usersCollection.findOne({ username });
+
+    if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.isLoggedIn = true;
+        req.session.username = user.username;
+        req.session.fullname = user.fullname || user.username;
+        req.session.role = user.role;
+        return res.redirect('/dashboard');
+    }
+    // Jika gagal
+    res.render('login', { error: "Username atau Password salah!", success: null });
+});
+
+// 3. Register Process (POST) - FITUR BARU SESUAI TAMPILAN ANDA
+app.post('/register', (req, res) => {
+    const { fullname, username, password, confirm_password } = req.body;
+
+    // Validasi dasar
+    if (password !== confirm_password) {
+        return res.render('login', { error: "Konfirmasi password tidak cocok!", success: null });
+    }
+
+    // Cek username kembar
+    if (usersCollection.findOne({ username })) {
+        return res.render('login', { error: "Username sudah digunakan!", success: null });
+    }
+
+    // Simpan User Baru
+    usersCollection.insert({
+        username: username,
+        password: bcrypt.hashSync(password, 10),
+        fullname: fullname || username, // Pakai input nama atau username
+        role: 'user' // Default user biasa
+    });
+
+    res.render('login', { error: null, success: "Registrasi Berhasil! Silakan Login." });
+});
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => res.redirect('/login'));
+});
+
+// === ROUTES DASHBOARD & LAINNYA (Sama seperti sebelumnya) ===
+// ... (Bagian Dashboard, Lapor, Admin tetap sama, tidak perlu diubah) ...
+// Untuk menyingkat, saya asumsikan kode Dashboard ke bawah sama dengan jawaban sebelumnya.
+// Pastikan bagian app.get('/dashboard'...) tetap ada.
+
+app.get('/dashboard', requireAuth, (req, res) => {
+    // ... Logika Dashboard Anda (Sama seperti kode sebelumnya) ...
+    // Copy dari kode dashboard sebelumnya
+    let reports = reportsCollection.find({}) || [];
+    reports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    // Helper stats manual jika function getStats tidak di-scope global
+    const stats = {
+        total: reports.length,
+        bahaya: reports.filter(r => r.status === 'Bahaya').length,
+        waspada: reports.filter(r => r.status === 'Waspada').length,
+        aman: reports.filter(r => r.status === 'Aman').length,
+        byKecamatan: {}, byHama: {}
+    };
+    reports.forEach(r => {
+        stats.byKecamatan[r.kec] = (stats.byKecamatan[r.kec] || 0) + 1;
+        stats.byHama[r.hama] = (stats.byHama[r.hama] || 0) + 1;
+    });
+
+    let usersList = [];
+    if(req.session.role === 'admin') usersList = usersCollection.find({});
+
+    res.render('dashboard', {
+        user: req.session,
+        reports: reports,
+        stats: stats,
+        usersList: usersList,
+        notification: req.session.notification || null
+    });
+    req.session.notification = null;
+});
+
+// ... (Paste sisa route Lapor, Admin Delete, dll disini) ...
+
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));

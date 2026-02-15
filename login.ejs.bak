@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login K-MAP Kebumen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8fafc; font-family: 'Segoe UI', sans-serif; }
+        .card-auth { max-width: 400px; margin: 80px auto; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card card-auth p-4 bg-white">
+            <div class="text-center mb-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Lambang_Kabupaten_Kebumen.png" width="70">
+                <h3 class="fw-bold mt-2" style="color: #064e3b;">K-MAP ACCESS</h3>
+                <p class="text-muted small">Sistem Monitoring Hama & Iklim</p>
+            </div>
+
+            <% if (error) { %> <div class="alert alert-danger py-2 small"><%= error %></div> <% } %>
+            <% if (success) { %> <div class="alert alert-success py-2 small"><%= success %></div> <% } %>
+
+            <ul class="nav nav-tabs nav-fill mb-3" id="authTab" role="tablist">
+                <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login-tab">Login</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#register-tab">Registrasi</button></li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="login-tab">
+                    <form action="/login" method="POST">
+                        <div class="mb-3"><input type="text" name="username" class="form-control" placeholder="Username" required></div>
+                        <div class="mb-3"><input type="password" name="password" class="form-control" placeholder="Password" required></div>
+                        <button class="btn btn-success w-100 fw-bold">MASUK</button>
+                    </form>
+                </div>
+
+                <div class="tab-pane fade" id="register-tab">
+                    <form action="/register" method="POST">
+                        <div class="mb-2"><input type="text" name="username" class="form-control" placeholder="Username Baru" required></div>
+                        <div class="mb-2"><input type="password" name="password" class="form-control" placeholder="Password" required></div>
+                        <div class="mb-3"><input type="password" name="confirm_password" class="form-control" placeholder="Konfirmasi Password" required></div>
+                        <button class="btn btn-outline-primary w-100 fw-bold">DAFTAR AKUN</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

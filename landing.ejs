@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINAR TANI - Menu Utama</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --glass-bg: rgba(255, 255, 255, 0.95); 
+            --primary-green: #2ecc71; 
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1625246333195-58197bd47d72?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+
+        .overlay { 
+            background: rgba(0, 0, 0, 0.6); 
+            min-height: 100vh; 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column;
+            padding-bottom: 80px; /* Space untuk Bottom Nav di HP */
+        }
+        
+        /* === MOBILE FIRST STYLES === */
+        
+        /* Header Mobile */
+        .app-header-mobile { 
+            padding: 20px 20px 10px 20px; 
+        }
+        
+        .user-greeting { color: white; }
+        .user-greeting small { opacity: 0.8; font-size: 0.8rem; }
+        .user-greeting h5 { font-weight: 700; margin: 0; letter-spacing: 0.5px; }
+        
+        .notification-bell {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+            border-radius: 50%; color: white;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .notification-bell:active { transform: scale(0.9); background: rgba(255,255,255,0.4); }
+
+        .app-brand { font-weight: 800; letter-spacing: 2px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        
+        /* Carousel */
+        .news-carousel { 
+            max-width: 100%; 
+            margin: 0 auto 20px auto; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+            border: 2px solid rgba(255,255,255,0.3); 
+        }
+        .carousel-caption { 
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); 
+            left: 0; right: 0; bottom: 0; 
+            padding: 20px 15px; 
+            text-align: left; 
+        }
+        .carousel-item img { 
+            height: 180px; 
+            object-fit: cover; 
+            filter: brightness(0.9); 
+        }
+
+        /* Grid Menu */
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+            padding: 0 5px; 
+        }
+        
+        .feature-card {
+            background: var(--glass-bg); 
+            border-radius: 20px; 
+            padding: 20px 10px; 
+            text-align: center; 
+            text-decoration: none; 
+            color: #333;
+            transition: all 0.2s ease; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+            border-bottom: 4px solid transparent; 
+            position: relative;
+            overflow: hidden; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .feature-card:hover { transform: translateY(-5px); background: #fff; }
+
+        .border-kmap { border-bottom-color: #ef4444; }
+        .border-shop { border-bottom-color: #10b981; }
+        .border-doc { border-bottom-color: #8b5cf6; }
+        .border-help { border-bottom-color: #f59e0b; }
+
+        .icon-box { 
+            width: 55px; height: 55px; 
+            margin-bottom: 10px; 
+            border-radius: 15px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.5rem; 
+            color: white; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
+        
+        .feature-title { font-weight: 800; font-size: 0.85rem; margin-bottom: 2px; text-transform: uppercase; }
+        .feature-desc { font-size: 0.65rem; color: #666; line-height: 1.2; max-width: 120px; }
+        .badge-soon { 
+            position: absolute; top: 0; right: 0; 
+            background: #9ca3af; color: white; 
+            font-size: 0.55rem; padding: 2px 8px; 
+            border-bottom-left-radius: 10px; font-weight: bold; 
+        }
+        
+        .footer-glass { 
+            background: transparent; 
+            color: white; 
+            text-align: center; 
+            padding: 15px; 
+            margin-top: 20px; 
+            font-size: 0.8rem; 
+        }
+
+        /* Bottom Nav (Hanya di HP) */
+        .bottom-nav {
+            position: fixed; 
+            bottom: 0; left: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around;
+            padding: 12px 0;
+            border-top-left-radius: 20px; 
+            border-top-right-radius: 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .nav-item {
+            text-align: center; color: #95a5a6; text-decoration: none;
+            font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
+            transition: color 0.2s;
+        }
+        .nav-item i { font-size: 1.4rem; margin-bottom: 2px; }
+        .nav-item.active { color: var(--primary-green); font-weight: 600; }
+        .nav-item:hover { color: var(--primary-green); }
+        .nav-item.logout:hover { color: #dc3545; }
+
+        /* === DESKTOP STYLES (Laptop/PC) === */
+        @media (min-width: 992px) {
+            .overlay { padding-bottom: 0; } /* Hapus space bottom nav */
+            .bottom-nav { display: none !important; } /* Sembunyikan Nav Bawah */
+            
+            /* Tampilkan Navbar Atas Desktop */
+            .desktop-navbar { display: flex !important; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); }
+            
+            /* Sembunyikan Header Mobile */
+            .app-header-mobile { display: none !important; }
+            
+            /* Grid jadi 4 Kolom */
+            .menu-grid { 
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 25px; 
+                max-width: 1000px; 
+                margin: 0 auto; 
+            }
+            .feature-card { padding: 40px 20px; } /* Kartu lebih besar */
+            .icon-box { width: 70px; height: 70px; font-size: 2rem; }
+            .feature-title { font-size: 1rem; }
+            .feature-desc { font-size: 0.8rem; max-width: 100%; }
+
+            /* Carousel Desktop */
+            .news-carousel { max-width: 800px; border-radius: 20px; margin-top: 40px; }
+            .carousel-item img { height: 350px; }
+            
+            .hero-text-desktop { margin-top: 100px; margin-bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        
+        <!-- 1. NAVBAR DESKTOP (Hanya muncul di Layar Besar) -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top desktop-navbar d-none" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                    <div class="bg-white text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="bi bi-flower1 fs-4"></i>
+                    </div>
+                    <span class="fw-bold text-white" style="letter-spacing: 1px;">SINAR TANI</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#desktopMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="desktopMenu">
+                    <ul class="navbar-nav ms-auto align-items-center gap-4">
+                        <li class="nav-item"><a href="/" class="nav-link text-white fw-bold">Beranda</a></li>
+                        <li class="nav-item"><a href="/dashboard" class="nav-link text-white">K-MAP</a></li>
+                        <li class="nav-item"><a href="/pasar" class="nav-link text-white">Pasar Tani</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center gap-2 bg-success px-3 py-1 rounded-pill" href="#" role="button" data-bs-toggle="dropdown">
+                                <!-- Foto Profil Kecil di Navbar Desktop -->
+                                <img src="<%= user.photo || 'https://cdn-icons-png.flaticon.com/512/847/847969.png' %>" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover;">
+                                <%= user.fullname %>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow">
+                                <li><a class="dropdown-item" href="/profil"><i class="bi bi-person me-2"></i>Profil Saya</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 2. HEADER MOBILE (Hanya muncul di HP) -->
+        <div class="app-header-mobile d-flex justify-content-between align-items-center d-lg-none">
+            <div class="d-flex align-items-center gap-3">
+                <div class="bg-white text-success rounded-circle d-flex align-items-center justify-content-center shadow-sm overflow-hidden" style="width: 45px; height: 45px;">
+                     <!-- Foto Profil User (Mobile) -->
+                     <img src="<%= user.photo || 'https://cdn-icons-png.flaticon.com/512/847/847969.png' %>" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="user-greeting">
+                    <small class="d-block">Selamat Pagi,</small>
+                    <h5><%= user.fullname %> 👋</h5>
+                </div>
+            </div>
+            <div class="notification-bell shadow-sm" onclick="alert('Belum ada notifikasi baru')">
+                <i class="bi bi-bell-fill"></i>
+            </div>
+        </div>
+
+        <!-- 3. HERO TEXT (Menyesuaikan Desktop/HP) -->
+        <div class="hero-section hero-text-desktop">
+            <h1 class="h3 app-brand mb-0 d-lg-none"><span style="color: #fff;">SINAR</span> <span style="color: #4ade80;">TANI</span></h1>
+            
+            <!-- Judul Besar Khusus Desktop -->
+            <div class="d-none d-lg-block text-center">
+                <h1 class="display-4 fw-bold text-white mb-2">Sistem Informasi Radar Pertanian</h1>
+                <p class="lead text-white-50">Solusi digital terintegrasi untuk petani modern</p>
+            </div>
+            
+            <p class="small text-white-50 d-lg-none">Menu Utama</p>
+        </div>
+
+        <!-- 4. CAROUSEL -->
+        <div class="container px-3">
+            <div id="infoCarousel" class="carousel slide news-carousel" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#infoCarousel" data-bs-slide-to="0" class="active"></button>
+                    <button type="button" data-bs-target="#infoCarousel" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#infoCarousel" data-bs-slide-to="2"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=1000&auto=format&fit=crop" class="d-block w-100">
+                        <div class="carousel-caption"><h5 class="fw-bold mb-0 text-warning">Waspada Musim Hujan!</h5><p class="small mb-0">Cek drainase sawah.</p></div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?q=80&w=1000&auto=format&fit=crop" class="d-block w-100">
+                        <div class="carousel-caption"><h5 class="fw-bold mb-0 text-info">Subsidi Pupuk Cair</h5><p class="small mb-0">Daftarkan kelompok tani.</p></div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://images.unsplash.com/photo-1530507629858-e4977d30e9e0?q=80&w=1000&auto=format&fit=crop" class="d-block w-100">
+                        <div class="carousel-caption"><h5 class="fw-bold mb-0 text-success">Panen Raya Kebumen</h5><p class="small mb-0">Harga gabah stabil.</p></div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#infoCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                <button class="carousel-control-next" type="button" data-bs-target="#infoCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+            </div>
+        </div>
+
+        <!-- 5. MENU GRID -->
+        <div class="container pb-3">
+            <div class="menu-grid">
+                
+                <!-- K-MAP -->
+                <a href="/dashboard" class="feature-card border-kmap">
+                    <div class="icon-box" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="bi bi-radar"></i></div>
+                    <div class="feature-title text-danger">K-MAP</div>
+                    <div class="feature-desc">Radar Pantau Hama</div>
+                </a>
+
+                <!-- PASAR TANI -->
+                <a href="/pasar" class="feature-card border-shop">
+                    <div class="icon-box" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="bi bi-bag-check-fill"></i></div>
+                    <div class="feature-title text-success">SIPINTARSHOP</div>
+                    <div class="feature-desc">Pasar Tani Online</div>
+                </a>
+
+                <!-- DOKTER TANI -->
+                <a href="#" class="feature-card border-doc" onclick="alert('Layanan Dokter Tanaman segera hadir!')">
+                    <span class="badge-soon">SEGERA</span>
+                    <div class="icon-box" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"><i class="bi bi-activity"></i></div>
+                    <div class="feature-title" style="color: #7c3aed;">DOKTER TANI</div>
+                    <div class="feature-desc">AI Deteksi Penyakit</div>
+                </a>
+
+                <!-- SI-PEDULI -->
+                <a href="/bantuan" class="feature-card border-help">
+                    <div class="icon-box" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="bi bi-buildings-fill"></i></div>
+                    <div class="feature-title" style="color: #d97706;">SI-PEDULI</div>
+                    <div class="feature-desc">Bantuan Dinas</div>
+                </a>
+
+            </div>
+        </div>
+
+        <footer class="footer-glass">
+            <small class="opacity-50">&copy; 2026 Developer Kanzie.</small>
+        </footer>
+
+        <!-- 6. BOTTOM NAVIGATION (Hanya Muncul di Mobile) -->
+        <div class="bottom-nav d-lg-none">
+            <a href="/" class="nav-item active">
+                <i class="bi bi-house-door-fill"></i>
+                <span>Beranda</span>
+            </a>
+            <a href="/dashboard" class="nav-item">
+                <i class="bi bi-map"></i>
+                <span>Peta</span>
+            </a>
+            <!-- MENU PROFIL -->
+            <a href="/profil" class="nav-item">
+                <i class="bi bi-person-circle"></i>
+                <span>Profil</span>
+            </a>
+            <a href="/logout" class="nav-item logout">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Keluar</span>
+            </a>
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

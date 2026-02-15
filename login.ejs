@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SINAR TANI</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        /* 1. ANIMASI BACKGROUND (Ken Burns Effect) */
+        @keyframes zoomEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 2. STYLE DASAR */
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            overflow: hidden; /* Hilangkan scrollbar */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Background Image Container */
+        .bg-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background: url('https://images.unsplash.com/photo-1533038590840-1cde6e668a91?q=80&w=1920&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
+            animation: zoomEffect 15s infinite alternate ease-in-out;
+        }
+
+        /* Overlay Gelap (Supaya tulisan terbaca) */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0, 50, 20, 0.5));
+            z-index: -1;
+        }
+
+        /* 3. KARTU LOGIN */
+        .login-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px); /* Efek Buram di belakang */
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            text-align: center;
+            animation: slideInUp 1s ease-out; /* Animasi muncul dari bawah */
+        }
+
+        /* LOGO & TEXT */
+        .brand-icon {
+            font-size: 4rem;
+            color: #2ecc71;
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+            display: inline-block;
+            animation: float 3s ease-in-out infinite; /* Icon melayang */
+        }
+        
+        .title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        /* FORM INPUT */
+        .form-floating {
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-out; /* Muncul pelan */
+        }
+        
+        .form-control {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white !important;
+            border-radius: 12px;
+        }
+        
+        .form-control:focus {
+            background: rgba(245, 244, 244, 0.2) !important;
+            border-color: #2ecc71;
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .form-control::placeholder { color: rgba(255,255,255,0.6); }
+        
+        label { color: rgba(255,255,255,0.7); }
+
+        /* TOMBOL GLOWING */
+        .btn-login {
+            background: linear-gradient(90deg, #0773d8, #00ce78);
+            border: none;
+            padding: 14px;
+            font-weight: 600;
+            border-radius: 50px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+            animation: fadeIn 2s ease-out;
+        }
+        
+        .btn-login:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 184, 148, 0.6);
+            background: linear-gradient(90deg, #00cec9, #00b894);
+        }
+
+        /* LINK DAFTAR */
+        .register-link {
+            display: block;
+            margin-top: 20px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            animation: fadeIn 2.5s ease-out;
+        }
+        .register-link:hover { color: #fff; text-shadow: 0 0 10px white; }
+
+        /* FOOTER */
+        .powered-by {
+            position: fixed;
+            bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            animation: fadeIn 3s ease-in;
+        }
+        .powered-by span {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-container"></div>
+    <div class="overlay"></div>
+
+    <div class="login-card">
+        <div class="brand-icon">
+            <i class="bi bi-flower1"></i>
+        </div>
+        
+        <h2 class="title">SINAR TANI</h2>
+        <p class="text-white-50 mb-4 small">Satu Aplikasi Untuk Semua Kebutuhan Petani</p>
+
+        <% if(message) { %>
+            <div class="alert alert-danger bg-danger bg-opacity-75 text-white border-0 py-2 small rounded-3 mb-4">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i><%= message %>
+            </div>
+        <% } %>
+
+        <form action="/login" method="POST">
+            <div class="form-floating">
+                <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Username" required>
+                <label for="floatingInput"><i class="bi bi-person me-2"></i>Username</label>
+            </div>
+            
+            <div class="form-floating">
+                <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password" required>
+                <label for="floatingPassword"><i class="bi bi-key me-2"></i>Password</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-login">
+                MASUK SEKARANG <i class="bi bi-arrow-right-short ms-1"></i>
+            </button>
+        </form>
+        
+        <a href="/register" class="register-link">
+            Belum punya akun? <b>Daftar Sekarang</b>
+        </a>
+    </div>
+
+    <div class="powered-by">
+        @powered by <span>Kaka Lovie C.</span>
+    </div>
+
+</body>
+</html>
